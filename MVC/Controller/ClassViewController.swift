@@ -106,7 +106,6 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 temp = results
             }
             dispatch_async(dispatch_get_main_queue()){ () -> Void in
-                print("refresh number: \(number); shouldCompleteRefresh: \(self.shouldCompleteRefresh)")
                 if self.shouldCompleteRefresh == number {
                     // Store data from database in NSUserDefaults
                     var postsToKeep: [Post] = []
@@ -127,7 +126,6 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     // Reload UI
                     self.display = temp
                     self.updateUI()
-                    print("did refresh")
                 }
             }
         }

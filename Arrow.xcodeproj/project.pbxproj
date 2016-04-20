@@ -42,6 +42,7 @@
 		8A8B0FB81CAAE38F00804087 /* MyClassesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B0FB71CAAE38F00804087 /* MyClassesTableViewCell.swift */; };
 		8A8B0FBA1CAAF43700804087 /* Enrollment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B0FB91CAAF43700804087 /* Enrollment.swift */; };
 		8AB6994C1CA59E090037483B /* SetupUserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB6994B1CA59E090037483B /* SetupUserProfileViewController.swift */; };
+		8ABCDB221CC7E23B00B78775 /* NewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABCDB211CC7E23B00B78775 /* NewPostViewController.swift */; };
 		8ACBA6891C889B6800959B00 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACBA6881C889B6800959B00 /* CurrentUser.swift */; };
 		8AD5E9111C8F56E7009D387D /* SetupClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5E9101C8F56E7009D387D /* SetupClassesViewController.swift */; };
 /* End PBXBuildFile section */
@@ -84,6 +85,7 @@
 		8A8B0FB71CAAE38F00804087 /* MyClassesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyClassesTableViewCell.swift; path = MVC/Controller/MyClassesTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		8A8B0FB91CAAF43700804087 /* Enrollment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enrollment.swift; sourceTree = "<group>"; };
 		8AB6994B1CA59E090037483B /* SetupUserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SetupUserProfileViewController.swift; path = MVC/Controller/SetupUserProfileViewController.swift; sourceTree = SOURCE_ROOT; };
+		8ABCDB211CC7E23B00B78775 /* NewPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewPostViewController.swift; path = MVC/Controller/NewPostViewController.swift; sourceTree = SOURCE_ROOT; };
 		8ACBA6881C889B6800959B00 /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		8ACFEE391C741BF800400DFF /* Arrow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Arrow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD5E9101C8F56E7009D387D /* SetupClassesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupClassesViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				8A426ECB1CB4169300A621C5 /* PostTableViewCell.swift */,
 				8A1FD8E81CB6C239003BB17B /* CommentsViewController.swift */,
 				8A1FD8EA1CB6C636003BB17B /* CommentTableViewCell.swift */,
+				8ABCDB211CC7E23B00B78775 /* NewPostViewController.swift */,
 			);
 			name = Controller;
 			path = ../MVC/Controller;
@@ -292,6 +295,7 @@
 				8A426ED01CB41F4700A621C5 /* Like.swift in Sources */,
 				8A81C90B1C87A41F0040FA6E /* User.swift in Sources */,
 				8A81C9071C87A41F0040FA6E /* SetupStateViewController.swift in Sources */,
+				8ABCDB221CC7E23B00B78775 /* NewPostViewController.swift in Sources */,
 				8A426ECC1CB4169300A621C5 /* PostTableViewCell.swift in Sources */,
 				8A81C90A1C87A41F0040FA6E /* Table.swift in Sources */,
 				8AD5E9111C8F56E7009D387D /* SetupClassesViewController.swift in Sources */,
