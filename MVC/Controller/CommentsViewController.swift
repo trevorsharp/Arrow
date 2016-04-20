@@ -8,26 +8,46 @@
 
 import UIKit
 
-class CommentsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CommentsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
 
     // MARK: Overridden Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        addCommentText.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CommentsViewController.keyboardWillChangeFrame(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
         refresh()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     // MARK: Properties
     var postToDisplay: Post = Post(0) // Passed from previous view controller
     private var display: [Comment] = []
+    private var firstType: Bool = true
     private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var addCommentView: UIView!
+    @IBOutlet weak var addCommentText: UITextView!
+    @IBAction func addCommentButton(sender: UIButton) {
+        if !firstType {
+            if addCommentText.text != "" {
+                postComment(addCommentText.text)
+            }
+        }
+    }
+    @IBAction func dismiss(sender: UITapGestureRecognizer) {
+        addCommentText.resignFirstResponder()
+    }
+    @IBOutlet weak var addCommentConstraint: NSLayoutConstraint!
     
     // MARK: Functions
     private func refresh() {
@@ -47,11 +67,16 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func suspendUI() {
+        addCommentText.resignFirstResponder()
+        addCommentText.text = "Add a comment..."
+        firstType = true
+        addCommentView?.hidden = true
         spinner?.hidden = false
         spinner?.startAnimating()
     }
     
     private func updateUI() {
+        addCommentView?.hidden = false
         display.sortInPlace { "\($0.date)".compare("\($1.date)") == .OrderedAscending }
         tableView.reloadData()
         spinner?.stopAnimating()
@@ -67,6 +92,27 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
                 let table = Table(type: 4)
                 table.deleteObjectWithStringKeys(["_id": commentID], error: &self.error)
             }
+        }
+    }
+    
+    private func postComment(comment: String) {
+        suspendUI()
+        let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+        dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+            let table = Table(type: 4)
+            if let postID = self.postToDisplay.identifier {
+                table.createObjectWithStringKeys(["text": comment, "post": postID], error: &self.error)
+            }
+            dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                self.refresh()
+            }
+        }
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        if firstType {
+            firstType = false
+            textView.text = ""
         }
     }
     
@@ -138,6 +184,23 @@ extension CommentsViewController { // TableView implementation
         if editingStyle == .Delete {
             // Delete the row from the data source
             removeComment(indexPath.row)
+        }
+    }
+}
+
+extension CommentsViewController {
+    
+    func keyboardWillChangeFrame(notification: NSNotification) {
+        let screenSize = UIScreen.mainScreen().bounds.height
+        let tabBarHeight = self.tabBarController!.tabBar.frame.size.height
+        let keyboardOrigin = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue().origin.y
+        let keyboardHeight = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue().height
+        if keyboardOrigin == screenSize {
+            addCommentConstraint.constant = 0
+        } else {
+            if keyboardHeight != nil {
+                addCommentConstraint.constant = keyboardHeight! - tabBarHeight
+            }
         }
     }
 }
