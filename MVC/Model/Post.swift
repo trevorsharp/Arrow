@@ -101,7 +101,7 @@ class Post: NSObject, NSCoding {
     
     func getDate() -> String {
         if date == 0 {
-            return "Now"
+            return "Posting..."
         }
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
