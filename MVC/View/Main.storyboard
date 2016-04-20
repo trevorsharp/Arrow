@@ -628,7 +628,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="reuseIdentifier" rowHeight="64" id="pq8-Ht-9QB" customClass="MyClassesTableViewCell" customModule="Arrow" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="reuseIdentifier" rowHeight="64" id="pq8-Ht-9QB" customClass="MyClassesTableViewCell" customModule="Arrow" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="113.5" width="600" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pq8-Ht-9QB" id="l1Z-Wc-E5N">
@@ -769,7 +769,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="2" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="140" sectionHeaderHeight="4" sectionFooterHeight="4" translatesAutoresizingMaskIntoConstraints="NO" id="k5i-WL-tNL">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCell" rowHeight="140" id="dzl-po-zWF" customClass="PostTableViewCell" customModule="Arrow" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="113.5" width="600" height="140"/>
@@ -934,7 +934,7 @@
                     <connections>
                         <outlet property="navigationBar" destination="I2H-wD-4XU" id="93V-n4-mdt"/>
                         <outlet property="tableView" destination="k5i-WL-tNL" id="EVn-31-I9c"/>
-                        <segue destination="M4U-YK-4Ib" kind="show" identifier="goToComments" id="wEE-7G-eFv"/>
+                        <segue destination="M4U-YK-4Ib" kind="show" identifier="goToComments" id="HOx-3l-C5h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xRF-mF-OoH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2282,15 +2282,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="2" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="108" sectionHeaderHeight="4" sectionFooterHeight="4" translatesAutoresizingMaskIntoConstraints="NO" id="Ixo-6b-BF3">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="2" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="68" sectionHeaderHeight="4" sectionFooterHeight="4" translatesAutoresizingMaskIntoConstraints="NO" id="Ixo-6b-BF3">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="commentCell" rowHeight="108" id="aKC-xq-O2J" customClass="CommentTableViewCell" customModule="Arrow" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="113.5" width="600" height="108"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="commentCell" rowHeight="68" id="aKC-xq-O2J" customClass="CommentTableViewCell" customModule="Arrow" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="113.5" width="600" height="68"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aKC-xq-O2J" id="rpJ-Di-5Rl">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="107.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="67.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo-NoCircle" translatesAutoresizingMaskIntoConstraints="NO" id="UCM-We-1Yu">
@@ -2321,7 +2321,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Body" translatesAutoresizingMaskIntoConstraints="NO" id="09w-HF-oVo">
-                                                    <rect key="frame" x="52" y="23.5" width="543.5" height="76"/>
+                                                    <rect key="frame" x="52" y="23" width="543.5" height="36"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
@@ -2369,45 +2369,68 @@
                                                 <exclude reference="F1q-eF-7ep"/>
                                             </mask>
                                         </variation>
+                                        <connections>
+                                            <action selector="addCommentButton:" destination="M4U-YK-4Ib" eventType="touchUpInside" id="3Vv-K1-U0S"/>
+                                        </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Add a comment..." translatesAutoresizingMaskIntoConstraints="NO" id="lVQ-wz-Obd">
                                         <rect key="frame" x="8" y="8" width="541" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                     </textView>
                                 </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="46" id="6YM-aR-qIL"/>
+                                    <constraint firstAttribute="width" constant="600" id="AQo-wJ-OpF"/>
                                     <constraint firstAttribute="bottom" secondItem="lVQ-wz-Obd" secondAttribute="bottom" constant="8" id="CA9-QV-3vY"/>
+                                    <constraint firstAttribute="height" constant="46" id="FcZ-pO-TTY"/>
                                     <constraint firstAttribute="trailing" secondItem="urx-bg-H9Z" secondAttribute="trailing" constant="8" id="J41-OA-EIO"/>
                                     <constraint firstItem="urx-bg-H9Z" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="top" constant="8" id="fi8-fB-s5J"/>
                                     <constraint firstItem="lVQ-wz-Obd" firstAttribute="leading" secondItem="S42-bx-3PI" secondAttribute="leading" constant="8" id="o0U-00-KGS"/>
                                     <constraint firstItem="urx-bg-H9Z" firstAttribute="leading" secondItem="lVQ-wz-Obd" secondAttribute="trailing" constant="8" id="odi-Kd-Rs0"/>
                                     <constraint firstItem="lVQ-wz-Obd" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="top" constant="8" id="qvS-nF-SHy"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6YM-aR-qIL"/>
+                                        <exclude reference="AQo-wJ-OpF"/>
+                                    </mask>
+                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Ixo-6b-BF3" firstAttribute="leading" secondItem="OVS-5c-hRh" secondAttribute="leading" id="0f2-Gy-bfQ"/>
                             <constraint firstItem="Ixo-6b-BF3" firstAttribute="top" secondItem="OVS-5c-hRh" secondAttribute="top" id="11X-IV-8LD"/>
+                            <constraint firstItem="ju0-dV-YRI" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="bottom" id="6qL-xC-7gd"/>
                             <constraint firstAttribute="trailing" secondItem="Ixo-6b-BF3" secondAttribute="trailing" id="8v1-VJ-vf9"/>
-                            <constraint firstItem="ju0-dV-YRI" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="bottom" id="JIT-3h-Nf1"/>
                             <constraint firstItem="lQV-YH-LjW" firstAttribute="centerX" secondItem="OVS-5c-hRh" secondAttribute="centerX" id="KHp-ST-iSi"/>
-                            <constraint firstItem="S42-bx-3PI" firstAttribute="width" secondItem="OVS-5c-hRh" secondAttribute="width" id="iLO-t1-qsV"/>
-                            <constraint firstItem="S42-bx-3PI" firstAttribute="centerX" secondItem="OVS-5c-hRh" secondAttribute="centerX" id="ijm-US-zH7"/>
+                            <constraint firstItem="S42-bx-3PI" firstAttribute="width" secondItem="OVS-5c-hRh" secondAttribute="width" id="VHI-Nr-iG7"/>
+                            <constraint firstItem="S42-bx-3PI" firstAttribute="centerX" secondItem="OVS-5c-hRh" secondAttribute="centerX" id="qkx-5L-Aqz"/>
                             <constraint firstAttribute="bottom" secondItem="Ixo-6b-BF3" secondAttribute="bottom" id="rBC-C0-meP"/>
                             <constraint firstItem="lQV-YH-LjW" firstAttribute="centerY" secondItem="OVS-5c-hRh" secondAttribute="centerY" id="zLF-K7-6QN"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="TVH-T1-1sa" appends="YES" id="PqZ-rd-AEf"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Comments" id="1Yi-J8-STh"/>
                     <connections>
+                        <outlet property="addCommentConstraint" destination="6qL-xC-7gd" id="DXH-XY-tX2"/>
+                        <outlet property="addCommentText" destination="lVQ-wz-Obd" id="gNv-ld-Znq"/>
+                        <outlet property="addCommentView" destination="S42-bx-3PI" id="YDm-PN-b43"/>
                         <outlet property="spinner" destination="lQV-YH-LjW" id="bLp-Yn-3Sd"/>
                         <outlet property="tableView" destination="Ixo-6b-BF3" id="73T-mI-ffg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YEr-Xe-8nE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="TVH-T1-1sa">
+                    <connections>
+                        <action selector="dismiss:" destination="M4U-YK-4Ib" id="Tbn-bZ-YXw"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-757" y="-264"/>
         </scene>
