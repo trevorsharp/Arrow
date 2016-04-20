@@ -58,9 +58,7 @@ class User: NSObject, NSCoding {
     
     // MARK: Function
     func getProfilePicture() -> UIImage? {
-        if userID == "576c66a00022-da7b-5e11-386d-08db87fd" {
-            return UIImage(named: "Profile-1")
-        } else if userID == "dff95c2bd1201e7ca5cf2a83e829068e" {
+        if userID == "dff95c2bd1201e7ca5cf2a83e829068e" {
             return UIImage(named: "Profile-2")
         } else {
             return UIImage(named: "Logo-NoCircle")
