@@ -24,6 +24,22 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        updateUI()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        shouldCompleteRefresh += 1
+        if needsRefresher {
+            needsRefresher = false
+            refreshControl.beginRefreshing()
+        }
+        refresh()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        shouldCompleteRefresh += 1
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -32,6 +48,11 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
             case "goToComments":
                 let dvc = segue.destinationViewController as! CommentsViewController
                 dvc.postToDisplay = passToComments
+            case "newPost":
+                let dvc = segue.destinationViewController as! UINavigationController
+                let ultimatedvc = dvc.viewControllers.first as! NewPostViewController
+                ultimatedvc.classToPostTo = classToDisplay
+                needsRefresher = true
             default: break
             }
         }
@@ -39,7 +60,7 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     // MARK: Properties
     var classToDisplay: Class = Class(classTitle: nil, schoolID: nil, professorID: nil) // Passed from previous view controller
-    private var display: [Post] = []
+    var display: [Post] = []
     private var passToComments: Post = Post(0)
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -48,13 +69,15 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }()
     private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
+    private var shouldCompleteRefresh: Int = 0
+    private var needsRefresher = false
     
+    @IBAction func unwindToClass(segue: UIStoryboardSegue) {}
     @IBOutlet weak var navigationBar: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
     
     // MARK: Functions
     private func load() {
-        suspendUI()
         // Get stored data from NSUserDefaults if applicable
         if let decoded  = defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
             let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
@@ -70,11 +93,10 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         updateUI()
-        refresh()
     }
     
     private func refresh() {
-        suspendUI()
+        let number = shouldCompleteRefresh
         var temp: [Post] = []
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
@@ -84,40 +106,48 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 temp = results
             }
             dispatch_async(dispatch_get_main_queue()){ () -> Void in
-                // Store data from database in NSUserDefaults
-                var postsToKeep: [Post] = []
-                if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
-                    let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
-                    for post in decodedPosts {
-                        if let classID = self.classToDisplay.identifier {
-                            if post.classID != classID {
-                                postsToKeep.append(post)
+                print("refresh number: \(number); shouldCompleteRefresh: \(self.shouldCompleteRefresh)")
+                if self.shouldCompleteRefresh == number {
+                    // Store data from database in NSUserDefaults
+                    var postsToKeep: [Post] = []
+                    if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
+                        let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
+                        for post in decodedPosts {
+                            if let classID = self.classToDisplay.identifier {
+                                if post.classID != classID {
+                                    postsToKeep.append(post)
+                                }
                             }
                         }
                     }
+                    postsToKeep.appendContentsOf(temp)
+                    let encodedData = NSKeyedArchiver.archivedDataWithRootObject(postsToKeep)
+                    self.defaults.setObject(encodedData, forKey: UserDefaults().keyForPosts)
+                    
+                    // Reload UI
+                    self.display = temp
+                    self.updateUI()
+                    print("did refresh")
                 }
-                postsToKeep.appendContentsOf(temp)
-                let encodedData = NSKeyedArchiver.archivedDataWithRootObject(postsToKeep)
-                self.defaults.setObject(encodedData, forKey: UserDefaults().keyForPosts)
-                
-                // Reload UI
-                self.display = temp
-                self.updateUI()
             }
         }
     }
     
-    private func suspendUI() {
-        refreshControl.beginRefreshing()
-    }
-    
     private func updateUI() {
         display.sortInPlace { "\($0.date)".compare("\($1.date)") == .OrderedDescending }
+        if display.last?.date == 0 {
+            if let post = display.last {
+                display.removeLast()
+                display.insert(post, atIndex: 0)
+            }
+        }
         tableView.reloadData()
         refreshControl.endRefreshing()
     }
     
     @IBAction func handleRefresh(refreshControl: UIRefreshControl) {
+        refreshControl.beginRefreshing()
+        shouldCompleteRefresh += 1
         refresh()
     }
     
@@ -184,18 +214,22 @@ extension ClassViewController { // TableView implementation
             display[sender.tag].liked = false
             display[sender.tag].numberOfLikes -= 1
             tableView.reloadData()
+            shouldCompleteRefresh += 1
             let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
             dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                 self.display[sender.tag].unlike(&self.error)
             }
+            self.refresh()
         } else {
             display[sender.tag].liked = true
             display[sender.tag].numberOfLikes += 1
             tableView.reloadData()
+            shouldCompleteRefresh += 1
             let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
             dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                 self.display[sender.tag].like(&self.error)
             }
+            self.refresh()
         }
     }
     
@@ -205,5 +239,36 @@ extension ClassViewController { // TableView implementation
     }
     
     @IBAction func more(sender: UIButton) {
+        let alert = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle:  UIAlertControllerStyle.ActionSheet
+        )
+        alert.addAction(UIAlertAction(
+            title: "Delete Post",
+            style: .Destructive)
+        { (action: UIAlertAction) -> Void in
+            // Delete Post
+            self.shouldCompleteRefresh += 1
+            let post = self.display[sender.tag]
+            self.display.removeAtIndex(sender.tag)
+            self.updateUI()
+            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                post.removeSelf(&self.error)
+                dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                    self.refresh()
+                }
+            }
+            }
+        )
+        alert.addAction(UIAlertAction(
+            title: "Cancel",
+            style: .Cancel)
+        { (action: UIAlertAction) -> Void in
+            // Do nothing
+            }
+        )
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 }

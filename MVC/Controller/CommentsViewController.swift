@@ -97,11 +97,18 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func postComment(comment: String) {
         suspendUI()
+        
+        // Remove leading and trailing spaces
+        let text = comment.stringByTrimmingCharactersInSet(
+            NSCharacterSet.whitespaceAndNewlineCharacterSet()
+        )
+        
+        // Post comment
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-            let table = Table(type: 4)
             if let postID = self.postToDisplay.identifier {
-                table.createObjectWithStringKeys(["text": comment, "post": postID], error: &self.error)
+                let commentObject = Comment(comment: text)
+                commentObject.addToDatabase(postID, error: &self.error)
             }
             dispatch_async(dispatch_get_main_queue()){ () -> Void in
                 self.refresh()
@@ -192,14 +199,15 @@ extension CommentsViewController {
     
     func keyboardWillChangeFrame(notification: NSNotification) {
         let screenSize = UIScreen.mainScreen().bounds.height
-        let tabBarHeight = self.tabBarController!.tabBar.frame.size.height
         let keyboardOrigin = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue().origin.y
         let keyboardHeight = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue().height
         if keyboardOrigin == screenSize {
             addCommentConstraint.constant = 0
         } else {
             if keyboardHeight != nil {
-                addCommentConstraint.constant = keyboardHeight! - tabBarHeight
+                if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+                    addCommentConstraint.constant = keyboardHeight! - tabBarHeight
+                }
             }
         }
     }

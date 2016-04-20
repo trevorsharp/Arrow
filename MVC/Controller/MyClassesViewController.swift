@@ -20,6 +20,9 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRowAtIndexPath(indexPath, animated: animated)
+        }
         refresh()
     }
     
@@ -210,3 +213,4 @@ extension MyClassesViewController { // TableView implementation
         }
     }
 }
+
