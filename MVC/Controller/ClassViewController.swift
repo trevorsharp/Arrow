@@ -208,65 +208,71 @@ extension ClassViewController { // TableView implementation
     }
     
     @IBAction func like(sender: UIButton) { // Like button tapped
-        if display[sender.tag].liked {
-            display[sender.tag].liked = false
-            display[sender.tag].numberOfLikes -= 1
-            tableView.reloadData()
-            shouldCompleteRefresh += 1
-            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
-            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-                self.display[sender.tag].unlike(&self.error)
+        if display[sender.tag].date != 0 {
+            if display[sender.tag].liked {
+                display[sender.tag].liked = false
+                display[sender.tag].numberOfLikes -= 1
+                tableView.reloadData()
+                shouldCompleteRefresh += 1
+                let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                    self.display[sender.tag].unlike(&self.error)
+                }
+                self.refresh()
+            } else {
+                display[sender.tag].liked = true
+                display[sender.tag].numberOfLikes += 1
+                tableView.reloadData()
+                shouldCompleteRefresh += 1
+                let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                    self.display[sender.tag].like(&self.error)
+                }
+                self.refresh()
             }
-            self.refresh()
-        } else {
-            display[sender.tag].liked = true
-            display[sender.tag].numberOfLikes += 1
-            tableView.reloadData()
-            shouldCompleteRefresh += 1
-            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
-            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-                self.display[sender.tag].like(&self.error)
-            }
-            self.refresh()
         }
     }
     
     @IBAction func comment(sender: UIButton) {
         passToComments = display[sender.tag]
-        performSegueWithIdentifier("goToComments", sender: self)
+        if passToComments.date != 0 {
+            performSegueWithIdentifier("goToComments", sender: self)
+        }
     }
     
     @IBAction func more(sender: UIButton) {
-        let alert = UIAlertController(
-            title: nil,
-            message: nil,
-            preferredStyle:  UIAlertControllerStyle.ActionSheet
-        )
-        alert.addAction(UIAlertAction(
-            title: "Delete Post",
-            style: .Destructive)
-        { (action: UIAlertAction) -> Void in
-            // Delete Post
-            self.shouldCompleteRefresh += 1
-            let post = self.display[sender.tag]
-            self.display.removeAtIndex(sender.tag)
-            self.updateUI()
-            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
-            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-                post.removeSelf(&self.error)
-                dispatch_async(dispatch_get_main_queue()){ () -> Void in
-                    self.refresh()
+        if display[sender.tag].date != 0 {
+            let alert = UIAlertController(
+                title: nil,
+                message: nil,
+                preferredStyle:  UIAlertControllerStyle.ActionSheet
+            )
+            alert.addAction(UIAlertAction(
+                title: "Delete Post",
+                style: .Destructive)
+            { (action: UIAlertAction) -> Void in
+                // Delete Post
+                self.shouldCompleteRefresh += 1
+                let post = self.display[sender.tag]
+                self.display.removeAtIndex(sender.tag)
+                self.updateUI()
+                let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                    post.removeSelf(&self.error)
+                    dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                        self.refresh()
+                    }
                 }
-            }
-            }
-        )
-        alert.addAction(UIAlertAction(
-            title: "Cancel",
-            style: .Cancel)
-        { (action: UIAlertAction) -> Void in
-            // Do nothing
-            }
-        )
-        self.presentViewController(alert, animated: true, completion: nil)
+                }
+            )
+            alert.addAction(UIAlertAction(
+                title: "Cancel",
+                style: .Cancel)
+            { (action: UIAlertAction) -> Void in
+                // Do nothing
+                }
+            )
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
     }
 }
