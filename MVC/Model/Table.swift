@@ -287,9 +287,9 @@ class Table {
         let results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
         
         // Delete KiiObject
-        if results.count != 0 {
-            let object = results[0] as! KiiObject
-            object.deleteSynchronous(error)
+        for object in results {
+            let kiiobject = object as! KiiObject
+            kiiobject.deleteSynchronous(error)
         }
     }
 }
