@@ -32,6 +32,16 @@ class Post: NSObject, NSCoding {
         liked = false
     }
     
+    init(postText: String, classIdentifier: String) {
+        user = CurrentUser()
+        text = postText
+        date = 0
+        classID = classIdentifier
+        numberOfComments = 0
+        numberOfLikes = 0
+        liked = false
+    }
+    
     init(kiiObject: KiiObject) {
         text = kiiObject.getObjectForKey("text") as! String
         date = (kiiObject.getObjectForKey("_created") as! Double) / 1000
@@ -84,14 +94,15 @@ class Post: NSObject, NSCoding {
     }
     
     // MARK: Functions
-    func addToDatabase(currentClass: Class, error: NSErrorPointer) {
+    func addToDatabase(error: NSErrorPointer) {
         let table = Table(type: 3)
-        if let classID = currentClass.identifier {
-            table.createObjectWithStringKeys(["text": text, "class": classID], error: error)
-        }
+        table.createObjectWithStringKeys(["text": text, "class": classID], error: error)
     }
     
     func getDate() -> String {
+        if date == 0 {
+            return "Now"
+        }
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
@@ -115,6 +126,17 @@ class Post: NSObject, NSCoding {
             if let userID = CurrentUser().userID {
                 table.deleteObjectWithStringKeys(["post": postID, "_owner": userID], error: error)
             }
+        }
+    }
+    
+    func removeSelf(error: NSErrorPointer) {
+        var table = Table(type: 3)
+        if let id = identifier {
+            table.deleteObjectWithStringKeys(["_id": id], error: error)
+            table = Table(type: 4)
+            table.deleteObjectWithStringKeys(["post": id], error: error)
+            table = Table(type: 5)
+            table.deleteObjectWithStringKeys(["post": id], error: error)
         }
     }
     

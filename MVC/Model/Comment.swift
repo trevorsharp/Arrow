@@ -24,6 +24,13 @@ class Comment {
         date = 0
     }
     
+    init(comment: String) {
+        var error: NSError?
+        user = User(userIdentifier: nil, error: &error)
+        text = comment
+        date = 0
+    }
+    
     init(kiiObject: KiiObject) {
         text = kiiObject.getObjectForKey("text") as! String
         date = (kiiObject.getObjectForKey("_created") as! Double) / 1000
@@ -44,11 +51,9 @@ class Comment {
     }
     
     // MARK: Functions
-    func addToDatabase(currentPost: Post, error: NSErrorPointer) {
+    func addToDatabase(postID: String, error: NSErrorPointer) {
         let table = Table(type: 4)
-        if let postID = currentPost.identifier {
-            table.createObjectWithStringKeys(["text": text, "post": postID], error: error)
-        }
+        table.createObjectWithStringKeys(["text": text, "post": postID], error: error)
     }
     
     func getDate() -> String {
