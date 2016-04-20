@@ -40,6 +40,7 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         shouldCompleteRefresh += 1
+        updateDefaults()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -140,7 +141,30 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         tableView.reloadData()
-        refreshControl.endRefreshing()
+        if display.count != 0 {
+            refreshControl.endRefreshing()
+        } else {
+            refreshControl.beginRefreshing()
+        }
+        
+    }
+    
+    private func updateDefaults() {
+        // Store data from display in NSUserDefaults
+        var postsToKeep: [Post] = []
+        if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
+            let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
+            for post in decodedPosts {
+                if let classID = self.classToDisplay.identifier {
+                    if post.classID != classID {
+                        postsToKeep.append(post)
+                    }
+                }
+            }
+        }
+        postsToKeep.appendContentsOf(display)
+        let encodedData = NSKeyedArchiver.archivedDataWithRootObject(postsToKeep)
+        self.defaults.setObject(encodedData, forKey: UserDefaults().keyForPosts)
     }
     
     @IBAction func handleRefresh(refreshControl: UIRefreshControl) {
