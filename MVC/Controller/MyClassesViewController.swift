@@ -23,7 +23,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(indexPath, animated: animated)
         }
-        refresh()
+        partialRefresh()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -41,6 +41,9 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     
     // MARK: Properties
     var display: [Class] = []
+    private var refreshing = false
+    private var removingClass = 0
+    private var didRemoveClass = false
     private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
     
@@ -51,14 +54,24 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func editButton(sender: UIBarButtonItem) {
         // Switch between editing and not editing
         if !tableView.editing {
-            sender.style = .Done
-            sender.title = "Done"
-            tableView.setEditing(true, animated: true)
+            if !refreshing {
+                sender.style = .Done
+                sender.title = "Done"
+                tableView.setEditing(true, animated: true)
+                didRemoveClass = false
+            }
         } else {
             sender.style = .Plain
             sender.title = "Edit"
             tableView.setEditing(false, animated: true)
-            refresh()
+            // Refresh if a class was removed
+            if didRemoveClass {
+                if removingClass == 0 {
+                    fullRefresh()
+                } else {
+                    suspendUI()
+                }
+            }
         }
     }
     
@@ -71,11 +84,19 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
             if decodedClasses.count != 0 {
                 display = decodedClasses
                 updateUI()
+                partialRefresh()
             }
+        }
+        
+        // Otherwise, perform a full refresh
+        if display.count == 0 {
+            fullRefresh()
         }
     }
     
-    func refresh() {
+    func fullRefresh() {
+        refreshing = true
+        suspendUI()
         var temp: [Class] = []
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
@@ -90,7 +111,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
             }
             
-            // Store current user information
+            // Store current user information in NSUserDefaults
             let currentUser = CurrentUser()
             if let schoolID = currentUser.school?.identifier {
                 self.defaults.setObject(schoolID, forKey: UserDefaults().keyForUserSchool)
@@ -101,7 +122,6 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
             if let lastName = currentUser.lastName {
                 self.defaults.setObject(lastName, forKey: UserDefaults().keyForUserLastName)
             }
-            
             dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 // Store data from database in NSUserDefaults
                 let encodedData = NSKeyedArchiver.archivedDataWithRootObject(temp)
@@ -109,14 +129,32 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
                 self.defaults.setObject(encodedData, forKey: UserDefaults().keyForMyClasses)
                 
                 // Reload UI
-                self.suspendUI()
                 self.display = temp
                 self.updateUI()
+                self.refreshing = false
             }
         }
     }
     
-    func suspendUI() {
+    private func partialRefresh() {
+        if !refreshing { // Only run partial refresh when full refresh is not occuring
+            let temp = display
+            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                // Refresh number of members in the class
+                for classObject in temp {
+                    classObject.refresh(&self.error)
+                }
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                    // Reload UI
+                    self.display = temp
+                    self.updateUI()
+                }
+            }
+        }
+    }
+    
+    private func suspendUI() {
         display.removeAll()
         tableView.reloadData()
         noClassesLabel?.hidden = true
@@ -127,22 +165,33 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     private func updateUI() {
         display.sortInPlace { $0.title.compare($1.title) == .OrderedAscending }
         tableView.reloadData()
-        if display.count == 0 {
-            noClassesLabel?.hidden = false
-        }
+        if display.count == 0 { noClassesLabel?.hidden = false }
         spinner?.stopAnimating()
         spinner?.hidden = true
     }
     
-    private func removeClass(index: Int) {
+    private func removeClass(index: Int) { // Remove a class from the user's classes
         if let classID = display[index].identifier {
+            didRemoveClass = true
+            
+            // Remove from TableView
             display.removeAtIndex(index)
             tableView.reloadData()
+            
+            // Remove enrollment from database
+            removingClass += 1
             let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
             dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                 if let userID = CurrentUser().userID {
                     let table = Table(type: 8)
                     table.deleteObjectWithStringKeys(["user": userID, "class": classID], error: &self.error)
+                }
+                self.removingClass -= 1
+                dispatch_async(dispatch_get_main_queue()){ () -> Void in
+                    // Refresh TableView if editing is done and no other classes are being removed
+                    if !self.tableView.editing && self.removingClass == 0 {
+                        self.fullRefresh()
+                    }
                 }
             }
         }

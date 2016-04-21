@@ -67,6 +67,14 @@ class Class: NSObject, NSCoding {
         return professorObject
     }
     
+    func refresh(error: NSErrorPointer) {
+        if identifier != nil {
+            let table = Table(type: 8)
+            let results = table.getObjectsWithKeyValue(["class": identifier!], limit: 0, error: error)
+            numberOfMembers = results.count
+        }
+    }
+    
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(title, forKey: "title")
         aCoder.encodeObject(school, forKey: "school")

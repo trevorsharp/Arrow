@@ -29,7 +29,7 @@ class SetupClassesViewController: UIViewController, UITableViewDelegate, UITable
             case "next": enroll()
             case "save":
                 let dvc = segue.destinationViewController as! MyClassesViewController
-                dvc.suspendUI()
+                dvc.fullRefresh()
             default: break
             }
         }
