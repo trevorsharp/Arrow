@@ -178,20 +178,8 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if error != nil {
                 print("Error: Code \(error!.code), \(error!.description)")
                 switch error!.code {
-                case 201: // No internet connection alert
-                    let alert = UIAlertController(
-                        title: "Offline",
-                        message: "Please check your internet connection.",
-                        preferredStyle:  UIAlertControllerStyle.Alert
-                    )
-                    alert.addAction(UIAlertAction(
-                        title: "Dismiss",
-                        style: .Cancel)
-                    { (action: UIAlertAction) -> Void in
-                        // Do nothing
-                        }
-                    )
-                    self.presentViewController(alert, animated: true, completion: nil)
+                case 201: // Do nothing
+                    break
                 default: // Error alert
                     let alert = UIAlertController(
                         title: "Error \(error!.code)",
