@@ -15,10 +15,9 @@ class UserDefaults {
     let keyForUserLastName: String = "userLastName"
     let keyForUserSchool: String = "userSchoolID"
     let keyForMyClasses: String = "myClassesArray"
-    let keyForPosts: String = "posts"
     var keys: [String] = []
     
     init() {
-        keys = [keyForUserID, keyForUserFirstName, keyForUserLastName, keyForUserSchool, keyForMyClasses, keyForPosts]
+        keys = [keyForUserID, keyForUserFirstName, keyForUserLastName, keyForUserSchool, keyForMyClasses]
     }
 }

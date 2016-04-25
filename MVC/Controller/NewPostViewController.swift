@@ -22,17 +22,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let id = segue.identifier {
-            switch id {
-            case "goBack":
-                textView.resignFirstResponder()
-                if let post = postResult {
-                    let dvc = segue.destinationViewController as! ClassViewController
-                    dvc.display.append(post)
-                }
-            default: break
-            }
-        }
+        textView.resignFirstResponder()
     }
     
     // MARK: Properties

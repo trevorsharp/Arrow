@@ -19,17 +19,7 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.addSubview(self.refreshControl)
-        load()
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        partialRefresh()
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        updateDefaults()
+        fullRefresh()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -65,30 +55,8 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var tableView: UITableView!
     
     // MARK: Functions
-    private func load() {
-        // Get stored data from NSUserDefaults if applicable
-        if let decoded  = defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
-            let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
-            if decodedPosts.count != 0 {
-                for post in decodedPosts {
-                    if let classID = classToDisplay.identifier {
-                        if post.classID == classID {
-                            display.append(post)
-                        }
-                    }
-                }
-                
-            }
-        }
-        
-        // Now, refresh
-        if display.count == 0 {
-            refreshControl.beginRefreshing()
-            fullRefresh()
-        }
-    }
-    
-    private func fullRefresh() {
+    func fullRefresh() {
+        refreshControl.beginRefreshing()
         refreshing += 1
         var temp: [Post] = []
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
@@ -101,40 +69,6 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
             self.refreshing -= 1
             dispatch_async(dispatch_get_main_queue()){ () -> Void in
                 if self.refreshing == 0 {
-                    // Store data from database in NSUserDefaults
-                    var postsToKeep: [Post] = []
-                    if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
-                        let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
-                        for post in decodedPosts {
-                            if let classID = self.classToDisplay.identifier {
-                                if post.classID != classID {
-                                    postsToKeep.append(post)
-                                }
-                            }
-                        }
-                    }
-                    postsToKeep.appendContentsOf(temp)
-                    let encodedData = NSKeyedArchiver.archivedDataWithRootObject(postsToKeep)
-                    self.defaults.setObject(encodedData, forKey: UserDefaults().keyForPosts)
-                    
-                    // Reload UI
-                    self.display = temp
-                    self.updateUI()
-                }
-            }
-        }
-    }
-    
-    private func partialRefresh() {
-        if refreshing == 0 { // Only run when full refresh is not occuring
-            let temp = display
-            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
-            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-                // Refresh number of comments and likes
-                for post in temp {
-                    post.refresh(&self.error)
-                }
-                dispatch_async(dispatch_get_main_queue()) { () -> Void in
                     // Reload UI
                     self.display = temp
                     self.updateUI()
@@ -149,26 +83,7 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
         refreshControl.endRefreshing()
     }
     
-    private func updateDefaults() {
-        // Store data from display in NSUserDefaults
-        var postsToKeep: [Post] = []
-        if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
-            let decodedPosts = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! [Post]
-            for post in decodedPosts {
-                if let classID = self.classToDisplay.identifier {
-                    if post.classID != classID {
-                        postsToKeep.append(post)
-                    }
-                }
-            }
-        }
-        postsToKeep.appendContentsOf(display)
-        let encodedData = NSKeyedArchiver.archivedDataWithRootObject(postsToKeep)
-        self.defaults.setObject(encodedData, forKey: UserDefaults().keyForPosts)
-    }
-    
     @IBAction func handleRefresh(refreshControl: UIRefreshControl) {
-        refreshControl.beginRefreshing()
         fullRefresh()
     }
     
@@ -177,8 +92,20 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if error != nil {
                 print("Error: Code \(error!.code), \(error!.description)")
                 switch error!.code {
-                case 201: // Do nothing
-                    break
+                case 201: // No internet connection alert
+                    let alert = UIAlertController(
+                        title: "Offline",
+                        message: "Please check your internet connection and try again.",
+                        preferredStyle:  UIAlertControllerStyle.Alert
+                    )
+                    alert.addAction(UIAlertAction(
+                        title: "Dismiss",
+                        style: .Cancel)
+                    { (action: UIAlertAction) -> Void in
+                        // Do nothing
+                        }
+                    )
+                    self.presentViewController(alert, animated: true, completion: nil)
                 default: // Error alert
                     let alert = UIAlertController(
                         title: "Error \(error!.code)",
