@@ -105,6 +105,7 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func postComment(comment: String) {
         suspendUI()
+        addCommentHeightConstraint.constant = 50
         
         // Remove leading and trailing spaces
         let text = comment.stringByTrimmingCharactersInSet(
@@ -140,8 +141,7 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
             textView.scrollRangeToVisible(NSRange(location:0, length:0))
             addCommentHeightConstraint.constant = 68
         default:
-            textView.scrollRangeToVisible(NSMakeRange(textView.text.characters.count - 1, 1))
-            addCommentHeightConstraint.constant = 86
+            break
         }
     }
     
