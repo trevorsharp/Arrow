@@ -34,8 +34,8 @@ class Class: NSObject, NSCoding {
         if identifier != nil {
             var error: NSError?
             let table = Table(type: 8)
-            let results = table.getObjectsWithKeyValue(["class": identifier!], limit: 0, error: &error)
-            numberOfMembers = results.count
+            let results = table.getObjectsWithKeyValue(["class": identifier!], limit: 0, error: &error).count
+            numberOfMembers = results
         } else {
             numberOfMembers = 0
         }
@@ -70,8 +70,8 @@ class Class: NSObject, NSCoding {
     func refresh(error: NSErrorPointer) {
         if identifier != nil {
             let table = Table(type: 8)
-            let results = table.getObjectsWithKeyValue(["class": identifier!], limit: 0, error: error)
-            numberOfMembers = results.count
+            let results = table.getObjectsWithKeyValue(["class": identifier!], limit: 0, error: error).count
+            numberOfMembers = results
         }
     }
     

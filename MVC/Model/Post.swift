@@ -35,7 +35,7 @@ class Post: NSObject, NSCoding {
     init(postText: String, classIdentifier: String) {
         user = CurrentUser()
         text = postText
-        date = 0
+        date = NSDate().timeIntervalSince1970 as Double
         classID = classIdentifier
         numberOfComments = 0
         numberOfLikes = 0
@@ -100,9 +100,6 @@ class Post: NSObject, NSCoding {
     }
     
     func getDate() -> String {
-        if date == 0 {
-            return "Posting..."
-        }
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
         dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
@@ -114,18 +111,21 @@ class Post: NSObject, NSCoding {
     func like(error: NSErrorPointer) {
         if let postID = identifier {
             if let userID = CurrentUser().userID {
-                let like = Like(user: userID, post: postID)
-                like.addToDatabase(error)
+                let table = Table(type: 5)
+                if table.getObjectsWithKeyValue(["post": postID, "user": userID], limit: 1, error: error).count == 0 {
+                    let like = Like(user: userID, post: postID)
+                    like.addToDatabase(error)
+                }
             }
         }
     }
     
-    func unlike(error: NSErrorPointer) {
-        let table = Table(type: 5)
-        if let postID = identifier {
-            if let userID = CurrentUser().userID {
-                table.deleteObjectWithStringKeys(["post": postID, "_owner": userID], error: error)
-            }
+    func refresh(error: NSErrorPointer) {
+        if identifier != nil {
+            var table = Table(type: 4)
+            numberOfComments = table.getObjectsWithKeyValue(["post": identifier!], limit: 0, error: error).count
+            table = Table(type: 5)
+            numberOfLikes = table.getObjectsWithKeyValue(["post": identifier!], limit: 0, error: error).count
         }
     }
     

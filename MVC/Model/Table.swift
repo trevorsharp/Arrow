@@ -37,7 +37,7 @@ class Table {
         7: "_ProfilePicture",
         8: "_Enrollment"
     ]
-    let maxQuerySize = 9999
+    let maxQuerySize = 100
     
     // MARK: Initializers
     init(type: Int){
@@ -131,37 +131,28 @@ class Table {
             let clause = KiiClause.equals(key, value: value)
             clauses.append(clause)
         }
-        
-        // Combine the clauses
         let totalClause = KiiClause.andClauses(clauses)
         
         // Build the query
-        let query = KiiQuery(clause: totalClause)
-        query.limit = Int32(queryLimit)
-        
-        // if all the results can't be returned in one pass
-        // using the given criteria. This will be pre-configured
-        // for you. A non-nil value means there is more data to retrieve
-        var allResults = [AnyObject]()
+        let firstQuery = KiiQuery(clause: totalClause)
+        firstQuery.limit = Int32(queryLimit)
         
         // Get an array of KiiObjects by querying the bucket
-        var nextQuery : KiiQuery?
-        var results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
+        var query: KiiQuery?
+        var results = table.executeQuerySynchronous(firstQuery, withError: error, andNext: &query)
         if error.memory != nil { return [] }
         
-        // Add all the results from this query to the total results
+        // Add the results from this query to the total results
+        var allResults = [AnyObject]()
         allResults.appendContentsOf(results)
         
-        // If there is more data to retreive
-        if nextQuery != nil {
-            var nextQuery2 : KiiQuery?
-            
-            // Make the next query, storing the results
-            results = table.executeQuerySynchronous(nextQuery, withError: error, andNext: &nextQuery2)
+        // Run subsequet queries
+        while query != nil {
+            var nextQuery: KiiQuery?
+            results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
             if error.memory != nil { return [] }
-            
-            // add these results to the total array
             allResults.appendContentsOf(results)
+            query = nextQuery
         }
         
         // Convert from AnyObject to Kii Object
@@ -226,6 +217,49 @@ class Table {
         }
         
         return resultsAsKiiObjects
+    }
+    
+    func getRecentPostsWithKeyValue(keyValuePairs: [String:String], error: NSErrorPointer) -> [Post] { // Retreives 50 most recent posts
+        // Set up the clauses
+        var clauses: [KiiClause] = []
+        for (key, value) in keyValuePairs {
+            let clause = KiiClause.equals(key, value: value)
+            clauses.append(clause)
+        }
+        let totalClause = KiiClause.andClauses(clauses)
+        
+        // Build the first query
+        let firstQuery = KiiQuery(clause: totalClause)
+        firstQuery.limit = Int32(maxQuerySize)
+        firstQuery.sortByDesc("_created")
+        
+        // Get an array of KiiObjects by querying the bucket
+        var query: KiiQuery?
+        var results = table.executeQuerySynchronous(firstQuery, withError: error, andNext: &query)
+        if error.memory != nil { return [] }
+        
+        // Add the results from this query to the total results
+        var allResults = [AnyObject]()
+        allResults.appendContentsOf(results)
+        
+        // Run subsequet queries
+        while query != nil {
+            var nextQuery: KiiQuery?
+            results = table.executeQuerySynchronous(query, withError: error, andNext: &nextQuery)
+            if error.memory != nil { return [] }
+            allResults.appendContentsOf(results)
+            query = nextQuery
+        }
+        
+        // Convert from AnyObject to Kii Object
+        var returnResults: [Post] = []
+        for object in allResults {
+            let kiiObject = object as! KiiObject
+            let post = Post(kiiObject: kiiObject)
+            returnResults.append(post)
+        }
+        
+        return returnResults
     }
     
     func createObjectWithStringKeys(keyValuePairs: [String:String], error: NSErrorPointer) -> Bool { // Adds an object to the database using key value pairs of type string
