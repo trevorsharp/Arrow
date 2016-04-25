@@ -2438,10 +2438,10 @@
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                             </activityIndicatorView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S42-bx-3PI">
-                                <rect key="frame" x="0.0" y="491" width="600" height="60"/>
+                                <rect key="frame" x="0.0" y="501" width="600" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urx-bg-H9Z">
-                                        <rect key="frame" x="557" y="15" width="35" height="30"/>
+                                        <rect key="frame" x="557" y="10" width="35" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="31" id="F1q-eF-7ep"/>
                                             <constraint firstAttribute="width" constant="35" id="YMm-S6-OFa"/>
@@ -2458,31 +2458,21 @@
                                         </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Add a comment..." translatesAutoresizingMaskIntoConstraints="NO" id="lVQ-wz-Obd">
-                                        <rect key="frame" x="8" y="8" width="541" height="44"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <rect key="frame" x="8" y="16" width="541" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" enablesReturnKeyAutomatically="YES"/>
                                     </textView>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="46" id="6YM-aR-qIL"/>
-                                    <constraint firstAttribute="width" constant="600" id="AQo-wJ-OpF"/>
-                                    <constraint firstAttribute="bottom" secondItem="lVQ-wz-Obd" secondAttribute="bottom" constant="8" id="CA9-QV-3vY"/>
-                                    <constraint firstAttribute="height" constant="60" id="FcZ-pO-TTY"/>
+                                    <constraint firstAttribute="bottom" secondItem="lVQ-wz-Obd" secondAttribute="bottom" constant="16" id="CA9-QV-3vY"/>
+                                    <constraint firstAttribute="height" constant="50" id="FcZ-pO-TTY"/>
                                     <constraint firstAttribute="trailing" secondItem="urx-bg-H9Z" secondAttribute="trailing" constant="8" id="J41-OA-EIO"/>
-                                    <constraint firstItem="urx-bg-H9Z" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="top" constant="8" id="fi8-fB-s5J"/>
                                     <constraint firstItem="urx-bg-H9Z" firstAttribute="centerY" secondItem="S42-bx-3PI" secondAttribute="centerY" id="lg9-0j-TBP"/>
                                     <constraint firstItem="lVQ-wz-Obd" firstAttribute="leading" secondItem="S42-bx-3PI" secondAttribute="leading" constant="8" id="o0U-00-KGS"/>
                                     <constraint firstItem="urx-bg-H9Z" firstAttribute="leading" secondItem="lVQ-wz-Obd" secondAttribute="trailing" constant="8" id="odi-Kd-Rs0"/>
-                                    <constraint firstItem="lVQ-wz-Obd" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="top" constant="8" id="qvS-nF-SHy"/>
+                                    <constraint firstItem="lVQ-wz-Obd" firstAttribute="top" secondItem="S42-bx-3PI" secondAttribute="top" constant="16" id="qvS-nF-SHy"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="6YM-aR-qIL"/>
-                                        <exclude reference="AQo-wJ-OpF"/>
-                                        <exclude reference="fi8-fB-s5J"/>
-                                    </mask>
-                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2505,6 +2495,7 @@
                     <navigationItem key="navigationItem" title="Comments" id="1Yi-J8-STh"/>
                     <connections>
                         <outlet property="addCommentConstraint" destination="6qL-xC-7gd" id="DXH-XY-tX2"/>
+                        <outlet property="addCommentHeightConstraint" destination="FcZ-pO-TTY" id="Zkp-rL-CGd"/>
                         <outlet property="addCommentText" destination="lVQ-wz-Obd" id="gNv-ld-Znq"/>
                         <outlet property="addCommentView" destination="S42-bx-3PI" id="YDm-PN-b43"/>
                         <outlet property="spinner" destination="lQV-YH-LjW" id="bLp-Yn-3Sd"/>

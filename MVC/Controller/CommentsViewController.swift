@@ -13,12 +13,19 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: Overridden Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Text view
         addCommentText.delegate = self
+        addCommentText.textContainerInset = UIEdgeInsetsZero
+        
+        // Table view
         tableView.delegate = self
         tableView.dataSource = self
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        // Notification for keyboard
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CommentsViewController.keyboardWillChangeFrame(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
+        
         refresh()
     }
     
@@ -37,6 +44,8 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var addCommentView: UIView!
     @IBOutlet weak var addCommentText: UITextView!
+    @IBOutlet weak var addCommentConstraint: NSLayoutConstraint!
+    @IBOutlet weak var addCommentHeightConstraint: NSLayoutConstraint!
     @IBAction func addCommentButton(sender: UIButton) {
         if !firstType {
             if addCommentText.text != "" {
@@ -47,7 +56,6 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBAction func dismiss(sender: UITapGestureRecognizer) {
         addCommentText.resignFirstResponder()
     }
-    @IBOutlet weak var addCommentConstraint: NSLayoutConstraint!
     
     // MARK: Functions
     private func refresh() {
@@ -120,6 +128,20 @@ class CommentsViewController: UIViewController, UITableViewDelegate, UITableView
         if firstType {
             firstType = false
             textView.text = ""
+        }
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        let font: UIFont = UIFont.systemFontOfSize(15)
+        switch round((textView.contentSize.height) / font.lineHeight) {
+        case 1:
+            addCommentHeightConstraint.constant = 50
+        case 2:
+            textView.scrollRangeToVisible(NSRange(location:0, length:0))
+            addCommentHeightConstraint.constant = 68
+        default:
+            textView.scrollRangeToVisible(NSMakeRange(textView.text.characters.count - 1, 1))
+            addCommentHeightConstraint.constant = 86
         }
     }
     
