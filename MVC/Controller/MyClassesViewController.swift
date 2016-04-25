@@ -84,7 +84,6 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
             if decodedClasses.count != 0 {
                 display = decodedClasses
                 updateUI()
-                partialRefresh()
             }
         }
         
@@ -137,7 +136,7 @@ class MyClassesViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     private func partialRefresh() {
-        if !refreshing { // Only run partial refresh when full refresh is not occuring
+        if !refreshing { // Only run when full refresh is not occuring
             let temp = display
             let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
             dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in

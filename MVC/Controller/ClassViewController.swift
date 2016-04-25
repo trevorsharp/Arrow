@@ -24,22 +24,11 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        updateUI()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        shouldCompleteRefresh += 1
-        if needsRefresher {
-            needsRefresher = false
-            refreshControl.beginRefreshing()
-        }
-        refresh()
+        partialRefresh()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        shouldCompleteRefresh += 1
         updateDefaults()
     }
     
@@ -53,7 +42,6 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 let dvc = segue.destinationViewController as! UINavigationController
                 let ultimatedvc = dvc.viewControllers.first as! NewPostViewController
                 ultimatedvc.classToPostTo = classToDisplay
-                needsRefresher = true
             default: break
             }
         }
@@ -68,10 +56,9 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
         refreshControl.addTarget(self, action: #selector(ClassViewController.handleRefresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         return refreshControl
     }()
+    private var refreshing = 0
     private let defaults = NSUserDefaults.standardUserDefaults()
     private var error: NSError? { didSet{ self.errorHandling(error) } }
-    private var shouldCompleteRefresh: Int = 0
-    private var needsRefresher = false
     
     @IBAction func unwindToClass(segue: UIStoryboardSegue) {}
     @IBOutlet weak var navigationBar: UINavigationItem!
@@ -93,21 +80,27 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 
             }
         }
-        updateUI()
+        
+        // Now, refresh
+        if display.count == 0 {
+            refreshControl.beginRefreshing()
+            fullRefresh()
+        }
     }
     
-    private func refresh() {
-        let number = shouldCompleteRefresh
+    private func fullRefresh() {
+        refreshing += 1
         var temp: [Post] = []
         let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
             let table = Table(type: 3)
             if let classID = self.classToDisplay.identifier {
-                let results = table.getObjectsWithKeyValue(["class": classID], limit: 0, error: &self.error) as! [Post]
+                let results = table.getRecentPostsWithKeyValue(["class": classID], error: &self.error)
                 temp = results
             }
+            self.refreshing -= 1
             dispatch_async(dispatch_get_main_queue()){ () -> Void in
-                if self.shouldCompleteRefresh == number {
+                if self.refreshing == 0 {
                     // Store data from database in NSUserDefaults
                     var postsToKeep: [Post] = []
                     if let decoded  = self.defaults.objectForKey(UserDefaults().keyForPosts) as? NSData {
@@ -132,21 +125,28 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    private func updateUI() {
-        display.sortInPlace { "\($0.date)".compare("\($1.date)") == .OrderedDescending }
-        if display.last?.date == 0 {
-            if let post = display.last {
-                display.removeLast()
-                display.insert(post, atIndex: 0)
+    private func partialRefresh() {
+        if refreshing == 0 { // Only run when full refresh is not occuring
+            let temp = display
+            let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
+            dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
+                // Refresh number of comments and likes
+                for post in temp {
+                    post.refresh(&self.error)
+                }
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                    // Reload UI
+                    self.display = temp
+                    self.updateUI()
+                }
             }
         }
+    }
+    
+    private func updateUI() {
+        display.sortInPlace { "\($0.date)".compare("\($1.date)") == .OrderedDescending }
         tableView.reloadData()
-        if display.count != 0 {
-            refreshControl.endRefreshing()
-        } else {
-            refreshControl.beginRefreshing()
-        }
-        
+        refreshControl.endRefreshing()
     }
     
     private func updateDefaults() {
@@ -169,8 +169,7 @@ class ClassViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func handleRefresh(refreshControl: UIRefreshControl) {
         refreshControl.beginRefreshing()
-        shouldCompleteRefresh += 1
-        refresh()
+        fullRefresh()
     }
     
     private func errorHandling(error: NSError?) {
@@ -219,41 +218,34 @@ extension ClassViewController { // TableView implementation
         return cell
     }
     
+    private func buttonsShouldBeEnabled(index: Int) -> Bool {
+        if display[index].identifier == nil { return false }
+        return true
+    }
+    
     @IBAction func like(sender: UIButton) { // Like button tapped
-        if display[sender.tag].date != 0 {
-            if display[sender.tag].liked {
-                display[sender.tag].liked = false
-                display[sender.tag].numberOfLikes -= 1
-                tableView.reloadData()
-                shouldCompleteRefresh += 1
-                let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
-                dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
-                    self.display[sender.tag].unlike(&self.error)
-                }
-                self.refresh()
-            } else {
+        if buttonsShouldBeEnabled(sender.tag) {
+            if !display[sender.tag].liked {
                 display[sender.tag].liked = true
                 display[sender.tag].numberOfLikes += 1
                 tableView.reloadData()
-                shouldCompleteRefresh += 1
                 let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
                 dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                     self.display[sender.tag].like(&self.error)
                 }
-                self.refresh()
             }
         }
     }
     
     @IBAction func comment(sender: UIButton) {
-        passToComments = display[sender.tag]
-        if passToComments.date != 0 {
+        if buttonsShouldBeEnabled(sender.tag) {
+            passToComments = display[sender.tag]
             performSegueWithIdentifier("goToComments", sender: self)
         }
     }
     
     @IBAction func more(sender: UIButton) {
-        if display[sender.tag].date != 0 {
+        if buttonsShouldBeEnabled(sender.tag) {
             let alert = UIAlertController(
                 title: nil,
                 message: nil,
@@ -264,15 +256,16 @@ extension ClassViewController { // TableView implementation
                 style: .Destructive)
             { (action: UIAlertAction) -> Void in
                 // Delete Post
-                self.shouldCompleteRefresh += 1
                 let post = self.display[sender.tag]
                 self.display.removeAtIndex(sender.tag)
                 self.updateUI()
+                self.refreshing += 1
                 let qos = Int(QOS_CLASS_BACKGROUND.rawValue)
                 dispatch_async(dispatch_get_global_queue(qos, 0)){ () -> Void in
                     post.removeSelf(&self.error)
+                    self.refreshing -= 1
                     dispatch_async(dispatch_get_main_queue()){ () -> Void in
-                        self.refresh()
+                        self.fullRefresh()
                     }
                 }
                 }
