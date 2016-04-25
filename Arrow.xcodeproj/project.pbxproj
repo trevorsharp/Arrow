@@ -161,9 +161,9 @@
 				8A8B0FB71CAAE38F00804087 /* MyClassesTableViewCell.swift */,
 				8A426EC91CB2EB8C00A621C5 /* ClassViewController.swift */,
 				8A426ECB1CB4169300A621C5 /* PostTableViewCell.swift */,
+				8ABCDB211CC7E23B00B78775 /* NewPostViewController.swift */,
 				8A1FD8E81CB6C239003BB17B /* CommentsViewController.swift */,
 				8A1FD8EA1CB6C636003BB17B /* CommentTableViewCell.swift */,
-				8ABCDB211CC7E23B00B78775 /* NewPostViewController.swift */,
 			);
 			name = Controller;
 			path = ../MVC/Controller;
@@ -262,6 +262,11 @@
 					8ACFEE381C741BF800400DFF = {
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = G6Z3KN8Z99;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
