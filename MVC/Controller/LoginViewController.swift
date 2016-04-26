@@ -137,7 +137,8 @@ class LoginViewController: UIViewController {
                     }
                 )
                 self.presentViewController(alert, animated: true, completion: nil)
-            case 320: break
+            case 320:
+                resetUI()
             default: // Error alert
                 let alert = UIAlertController(
                     title: "Error \(error!.code)",
