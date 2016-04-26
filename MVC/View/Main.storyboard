@@ -827,10 +827,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T8S-bg-U9l">
-                                                    <rect key="frame" x="74" y="105" width="22" height="22"/>
+                                                    <rect key="frame" x="78" y="101" width="39.5" height="30"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6OL-cO-QNn">
-                                                    <rect key="frame" x="133" y="105" width="22" height="22"/>
+                                                    <rect key="frame" x="137" y="101" width="39.5" height="30"/>
                                                 </button>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="More" translatesAutoresizingMaskIntoConstraints="NO" id="vve-SY-FIc">
                                                     <rect key="frame" x="564" y="105" width="22" height="22"/>
@@ -843,33 +843,36 @@
                                                     <rect key="frame" x="564" y="105" width="22" height="22"/>
                                                 </button>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Body" translatesAutoresizingMaskIntoConstraints="NO" id="aMK-pT-8ue">
-                                                    <rect key="frame" x="70" y="36" width="520" height="65"/>
+                                                    <rect key="frame" x="70" y="36" width="520" height="61"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                                                    <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
                                                 </textView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="fGL-Ww-YYz" firstAttribute="centerY" secondItem="Opb-sq-p5g" secondAttribute="centerY" id="0Tn-y3-JqV"/>
                                                 <constraint firstItem="6OL-cO-QNn" firstAttribute="width" secondItem="Opb-sq-p5g" secondAttribute="width" id="3aA-tZ-RkE"/>
                                                 <constraint firstItem="6OL-cO-QNn" firstAttribute="centerX" secondItem="Opb-sq-p5g" secondAttribute="centerX" id="4Oc-NQ-Rwf"/>
-                                                <constraint firstItem="T8S-bg-U9l" firstAttribute="height" secondItem="lOk-dO-Mhd" secondAttribute="height" id="6bF-cy-i6Z"/>
+                                                <constraint firstItem="T8S-bg-U9l" firstAttribute="height" secondItem="lOk-dO-Mhd" secondAttribute="height" constant="8" id="6bF-cy-i6Z"/>
                                                 <constraint firstItem="T8S-bg-U9l" firstAttribute="top" secondItem="aMK-pT-8ue" secondAttribute="bottom" constant="4" id="7W0-xj-6Za"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="lOk-dO-Mhd" secondAttribute="bottom" constant="4" id="80x-1j-8PU"/>
                                                 <constraint firstItem="aMK-pT-8ue" firstAttribute="trailing" secondItem="4Gu-Ak-O51" secondAttribute="trailing" constant="4" id="8Wc-mE-Z0P"/>
                                                 <constraint firstAttribute="topMargin" secondItem="Egc-rl-Uac" secondAttribute="top" id="9Jf-vo-4j4"/>
                                                 <constraint firstItem="T8S-bg-U9l" firstAttribute="centerY" secondItem="lOk-dO-Mhd" secondAttribute="centerY" id="Ak2-LM-dBM"/>
                                                 <constraint firstItem="4Gu-Ak-O51" firstAttribute="centerY" secondItem="Egc-rl-Uac" secondAttribute="centerY" id="BPq-z5-Cqx"/>
+                                                <constraint firstItem="6OL-cO-QNn" firstAttribute="leading" secondItem="Opb-sq-p5g" secondAttribute="leading" constant="4" id="FWh-Fc-PB3"/>
                                                 <constraint firstItem="Opb-sq-p5g" firstAttribute="leading" secondItem="lOk-dO-Mhd" secondAttribute="trailing" constant="20" id="GMP-WP-bYb"/>
+                                                <constraint firstItem="T8S-bg-U9l" firstAttribute="leading" secondItem="lOk-dO-Mhd" secondAttribute="leading" constant="4" id="GsH-Ny-frR"/>
                                                 <constraint firstItem="vve-SY-FIc" firstAttribute="centerY" secondItem="Opb-sq-p5g" secondAttribute="centerY" id="I0e-RO-rxd"/>
                                                 <constraint firstItem="T8S-bg-U9l" firstAttribute="centerX" secondItem="lOk-dO-Mhd" secondAttribute="centerX" id="Jfr-ZT-aJX"/>
                                                 <constraint firstItem="Egc-rl-Uac" firstAttribute="top" secondItem="sv9-2d-OOI" secondAttribute="top" id="Kqk-jg-96E"/>
-                                                <constraint firstItem="6OL-cO-QNn" firstAttribute="height" secondItem="Opb-sq-p5g" secondAttribute="height" id="NyK-3n-jYz"/>
+                                                <constraint firstItem="6OL-cO-QNn" firstAttribute="height" secondItem="Opb-sq-p5g" secondAttribute="height" constant="8" id="NyK-3n-jYz"/>
                                                 <constraint firstItem="J5J-96-rLr" firstAttribute="width" secondItem="vve-SY-FIc" secondAttribute="width" id="PYA-uZ-r8R"/>
                                                 <constraint firstAttribute="leadingMargin" secondItem="sv9-2d-OOI" secondAttribute="leading" constant="-4" id="U9w-ar-HUk"/>
                                                 <constraint firstItem="J5J-96-rLr" firstAttribute="centerX" secondItem="vve-SY-FIc" secondAttribute="centerX" id="UWU-2R-TQS"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="4Gu-Ak-O51" secondAttribute="trailing" constant="6" id="Udv-MP-uI4"/>
                                                 <constraint firstItem="fGL-Ww-YYz" firstAttribute="leading" secondItem="Opb-sq-p5g" secondAttribute="trailing" constant="8" symbolic="YES" id="VRs-KT-Ewi"/>
+                                                <constraint firstItem="T8S-bg-U9l" firstAttribute="trailing" secondItem="J7r-Gj-woL" secondAttribute="trailing" constant="4" id="Vfd-3f-gEW"/>
                                                 <constraint firstItem="J5J-96-rLr" firstAttribute="height" secondItem="vve-SY-FIc" secondAttribute="height" id="WFs-Pd-305"/>
                                                 <constraint firstItem="vve-SY-FIc" firstAttribute="trailing" secondItem="4Gu-Ak-O51" secondAttribute="trailing" id="WXy-gA-lOu"/>
                                                 <constraint firstItem="aMK-pT-8ue" firstAttribute="top" secondItem="Egc-rl-Uac" secondAttribute="bottom" id="YL7-1o-LAD"/>
@@ -878,6 +881,7 @@
                                                 <constraint firstItem="J7r-Gj-woL" firstAttribute="leading" secondItem="lOk-dO-Mhd" secondAttribute="trailing" constant="8" symbolic="YES" id="dIl-Sz-wvF"/>
                                                 <constraint firstAttribute="topMargin" secondItem="sv9-2d-OOI" secondAttribute="top" constant="-4" id="g6I-ko-YSC"/>
                                                 <constraint firstItem="lOk-dO-Mhd" firstAttribute="leading" secondItem="Egc-rl-Uac" secondAttribute="leading" id="h0g-i0-7YU"/>
+                                                <constraint firstItem="6OL-cO-QNn" firstAttribute="trailing" secondItem="fGL-Ww-YYz" secondAttribute="trailing" constant="4" id="ifm-SA-zzK"/>
                                                 <constraint firstItem="aMK-pT-8ue" firstAttribute="leading" secondItem="Egc-rl-Uac" secondAttribute="leading" constant="-4" id="joT-Jx-gSV"/>
                                                 <constraint firstItem="4Gu-Ak-O51" firstAttribute="top" secondItem="t6M-3X-0Y6" secondAttribute="topMargin" id="mgh-PV-Oeq"/>
                                                 <constraint firstItem="J5J-96-rLr" firstAttribute="centerY" secondItem="vve-SY-FIc" secondAttribute="centerY" id="nNA-C1-hkc"/>
@@ -892,6 +896,10 @@
                                             <variation key="default">
                                                 <mask key="constraints">
                                                     <exclude reference="9Jf-vo-4j4"/>
+                                                    <exclude reference="Jfr-ZT-aJX"/>
+                                                    <exclude reference="sfV-Nn-jAz"/>
+                                                    <exclude reference="3aA-tZ-RkE"/>
+                                                    <exclude reference="4Oc-NQ-Rwf"/>
                                                     <exclude reference="GMP-WP-bYb"/>
                                                     <exclude reference="mgh-PV-Oeq"/>
                                                     <exclude reference="oGz-QX-VWt"/>
@@ -2408,7 +2416,7 @@
                                                     <rect key="frame" x="52" y="23" width="543.5" height="36"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                                                    <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
                                                 </textView>
                                             </subviews>
                                             <constraints>
