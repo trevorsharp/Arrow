@@ -510,7 +510,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Arrow/Arrow-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = arm64;
+				VALID_ARCHS = armv7;
 			};
 			name = Debug;
 		};
@@ -540,7 +540,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Arrow/Arrow-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = arm64;
+				VALID_ARCHS = armv7;
 			};
 			name = Release;
 		};
