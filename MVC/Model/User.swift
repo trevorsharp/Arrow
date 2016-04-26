@@ -60,6 +60,14 @@ class User: NSObject, NSCoding {
     func getProfilePicture() -> UIImage? {
         if userID == "dff95c2bd1201e7ca5cf2a83e829068e" {
             return UIImage(named: "Profile-2")
+        } else if userID == "576c66a00022-da7b-5e11-386d-08db87fd" {
+            return UIImage(named: "Profile-Trevor")
+        } else if userID == "afd7ee20-0bbc-11e6-9119-22000a178351" {
+                return UIImage(named: "Profile-Anna")
+        } else if userID == "b687d050-0bbc-11e6-9f69-22000a69855a" {
+            return UIImage(named: "Profile-Philippe")
+        } else if userID == "c3cbcf50-0bbc-11e6-9119-22000a178351" {
+            return UIImage(named: "Profile-Christian")
         } else {
             return UIImage(named: "Logo-NoCircle")
         }

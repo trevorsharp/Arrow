@@ -44,11 +44,11 @@ class Post: NSObject, NSCoding {
     
     init(kiiObject: KiiObject) {
         text = kiiObject.getObjectForKey("text") as! String
-        date = (kiiObject.getObjectForKey("_created") as! Double) / 1000
+        date = Double(kiiObject.getObjectForKey("created") as! String)! // TESTING
         identifier = kiiObject.getObjectForKey("_id") as? String
         classID = kiiObject.getObjectForKey("class") as! String
         var error: NSError?
-        if let userID = kiiObject.getObjectForKey("_owner") as? String {
+        if let userID = kiiObject.getObjectForKey("owner") as? String { // TESTING
             let table = Table(type: 0)
             let results = table.getObjectsWithKeyValue(["_id": userID], limit: 1, error: &error)
             if results.count != 0 {
